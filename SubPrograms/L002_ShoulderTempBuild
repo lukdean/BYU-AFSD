@@ -1,0 +1,20 @@
+%
+L002 (************************************************ Subroutine for shoulder temp building)
+(Jason Glenn and Luk Dean, 2021-11-22)
+(Last modified by:  Luk Dean, 2021-11-22)
+(Performs operations to make should temp build in intilizatization)
+def REAL NewValue = 1
+
+N1  M64                                   (Wait until the shoulder is in contact with the workpiece)
+N2  G04 .5
+N3  (Pause until temperature achieved)
+N4  $WHILE TempCtrl.Status.T < TransitionTemperatureOne
+N5      $IF [NewValue > 6000]
+N6          $BREAK
+N7      $ENDIF
+N8      NewValue = NewValue + 1
+N9  G04 0.01                          (Wait for a bit)
+N10 G172                              (Sync Preprocessor) (This means dont look ahead an pre-grab values, or else the while comparison will use stale values)
+N11 $ENDWHILE
+N12 M02 (return to main program)
+%
